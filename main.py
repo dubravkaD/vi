@@ -192,7 +192,7 @@ def base_system_installation(arch: str = "x86_64", repo: str = "https://repo-def
     # mkdir -p /mnt/var/db/xbps/keys
     # cp /var/db/xbps/keys/* /mnt/var/db/xbps/keys/
     run(["mkdir", "-p", "/mnt/var/db/xbps/keys"])
-    run(["cp", "/var/db/xbps/keys/.", "/mnt/var/db/xbps/keys/"])
+    run(["cp", "-rv", "/var/db/xbps/keys/.", "/mnt/var/db/xbps/keys/"])
     # XBPS_ARCH=$ARCH xbps-install -S -r /mnt -R "$REPO" base-system
     run([f"XBPS_ARCH={arch}", "xbps-install", "-S", "-r", "/mnt", "-R", repo, "base-system"])
 

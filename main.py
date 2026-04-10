@@ -283,6 +283,17 @@ def system_detection() -> tuple[str, str]:
     return arch, firmware
 
 
+def get_choice(min_val=1, max_val=8) -> int:
+    while True:
+        try:
+            choice = int(input(f"Select an option ({min_val}-{max_val}): "))
+            if min_val <= choice <= max_val:
+                return choice
+            print(f"Enter a number between {min_val} and {max_val}\n")
+        except ValueError:
+            print("Invalid input\n")
+
+
 def cli_menu_configure_system_basics() -> None:
     print("*********************************")
     print("7. Configure System Basics")
@@ -291,8 +302,7 @@ def cli_menu_configure_system_basics() -> None:
     print("7b. Set timezone")
     print("7c. Set locale")
     print("7d. Set Root Password")
-    print("7e. Create User")
-    print("\n")
+    print("7e. Create User\n")
 
 
 def cli_menu() -> None:
@@ -304,14 +314,43 @@ def cli_menu() -> None:
     print("6. Install Bootloader")
     print("7. Finalization")
     print("8. Reboot")
-    print("\n")
+    print("9. Exit")
+
+
+def main_loop():
+    while True:
+        cli_menu()
+        arch, type = system_detection()
+        choice = get_choice(max_val=9)
+        try:
+            match choice:
+                case 1:
+                    system_detection()
+                case 2:
+                    disk_partitioning()
+                case 3:
+                    mount_filesystem()
+                case 4:
+                    base_system_installation()
+                case 5:
+                    system_configuration()
+                case 6:
+                    install_bootloader()
+                case 7:
+                    finalization()
+                case 8:
+                    reboot()
+                case 9:
+                    print("Exiting program...")
+                    break
+        except subprocess.CalledProcessError as e:
+            print(f"Command failed: {e}")
 
 
 def main_banner() -> None:
     print("*********************************")
-    print("\tVoid Linux install script")
+    print("    Void Linux install script")
     print("*********************************")
-    print("\n")
 
 
 def main() -> None:
@@ -320,13 +359,15 @@ def main() -> None:
     # cli_menu()
     # cli_menu_configure_system_basics()
     # print(detect_architecture())
-    arch , type = system_detection()
-    disk_partitioning()
-    mount_filesystem()
-    base_system_installation()
-    system_configuration()
-    install_bootloader()
-    finalization()
+    # arch , type = system_detection()
+    main_loop()
+    # print(get_choice())
+    # disk_partitioning()
+    # mount_filesystem()
+    # base_system_installation()
+    # system_configuration()
+    # install_bootloader()
+    # finalization()
 
 
 if __name__ == '__main__':

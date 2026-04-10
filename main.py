@@ -26,7 +26,7 @@ def run(cmd) -> None:
         Run a shell command
     """
     print(f"Running: {cmd}")
-    subprocess.run(cmd, check=True)
+    subprocess.run(cmd, check=True, shell=True)
 
 
 def is_uefi() -> bool:

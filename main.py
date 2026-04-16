@@ -86,11 +86,12 @@ def display_system_data() -> None:
 
 def reboot() -> None:
     # exit
+    # DON'T WORK:
     # umount -R /mnt
     # shutdown -r now
     run(["exit"])
-    run(["unmount", "-R", "/mnt"])
-    run(["shutdown", "-r", "now"])
+    # run(["unmount", "-R", "/mnt"])
+    # run(["shutdown", "-r", "now"])
 
 
 def finale_step() -> None:
@@ -108,9 +109,9 @@ def finalization() -> None:
 def grub_install(boot_mode: str = "UEFI", disk: str = "/dev/sda", arch: str = "x86_64") -> None:
     if boot_mode == "UEFI":
         if arch == "x86_64":
-            # xbps-install -S grub-x86_64-efi
+            # xbps-install -S grub-x86_64-efi efibootmgr
             # grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id="Void"
-            run(["xbps-install", "-S", "grub-x86_64-efi"])
+            run(["xbps-install", "-S", "grub-x86_64-efi", "efibootmgr"])
             run(["grub-install", "--target=x86_64-efi", "--efi-directory=/boot/efi", '--bootloader-id="Void"'])
         elif arch == "i386":
             run(["xbps-install", "-S", "grub-i386-efi"])
@@ -123,6 +124,8 @@ def grub_install(boot_mode: str = "UEFI", disk: str = "/dev/sda", arch: str = "x
         # grub-install /dev/sda
         run(["xbps-install", "-S", "grub"])
         run(["grub-install", disk])
+    # grub-mkconfig -o /boot/grub/grub.cfg
+    run(["grub-mkconfig", "-o", "/boot/grub/grub.cfg"])
 
 
 def install_bootloader() -> None:
@@ -167,7 +170,8 @@ def installation_configuration(hostname:str = "voidlinux") -> None:
 # FIX: ERROR no /dev
 def entering_chroot() -> None:
     # xchroot /mnt /bin/bash
-    run(["xchroot", "/mnt", "/bin/bash"])
+    # run(["xchroot", "/mnt", "/bin/bash"])
+    subprocess.run(["xchroot", "/mnt", "/bin/bash"], check=True)
 
 
 def configure_filesystems() -> None:
